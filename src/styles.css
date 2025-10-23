@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: #e6e6e6;
+  background-color: #2b2b2b;
+}
+
+body {
+  background-color: #2b2b2b;
+}
+/* Remove spinners in Chrome, Edge, Safari */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove spinners in Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Optional: make it look consistent with your dark style */
+input[type=number] {
+  background-color: #2e2e2e;
+  color: #e6e6e6;
+  border: 1px solid #5a5a5a;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}

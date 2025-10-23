@@ -1,0 +1,16 @@
+<div class="main-board">
+  <div class="col-layout">
+  <app-project-buttons (importEvent)="onImport($event)"/>
+  <div class="full-width">
+    <app-buttons-interface (clearEvent)="onClear($event)" ></app-buttons-interface>
+    <app-draw-board #playground></app-draw-board>
+  </div>
+  </div>
+  <div class="side-panel">
+    <app-dynamic-form [formFields]="rectFormFields" *ngIf="getStateByToolName('rectangle')" [formTitle]="'Rectangle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
+    <app-dynamic-form [formFields]="lineFormFields" *ngIf="getStateByToolName('line')" [formTitle]="'Line'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
+    <app-dynamic-form [formFields]="circleFormFields" *ngIf="getStateByToolName('circle')" [formTitle]="'Circle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
+    <app-dynamic-form [formFields]="handFormFields" *ngIf="getStateByToolName('hand')" [formTitle]="'Move shape'" (formSubmit)="onSubmit($event)"/>
+    <app-dynamic-form [formFields]="resizeFormFields" *ngIf="getStateByToolName('resize')" [formTitle]="'Resize shape'" (formSubmit)="onSubmit($event)"/>
+  </div>
+</div>

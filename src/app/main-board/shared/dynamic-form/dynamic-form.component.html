@@ -1,0 +1,10 @@
+<div class="dynamic-form">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <h3>{{formTitle}}</h3>
+    <div class="form-group" *ngFor="let field of formFields">
+      <label>{{field.label}}</label>
+      <input [type]="field.fieldType" [name]="field.fieldName" [formControlName]="field.fieldName">
+    </div>
+    <button>Draw</button>
+  </form>
+</div>

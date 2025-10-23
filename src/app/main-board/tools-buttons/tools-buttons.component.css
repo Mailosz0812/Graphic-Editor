@@ -1,0 +1,41 @@
+.toolbar {
+  width: 3rem;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button,
+.file-btn{
+  display: inline-flex;
+  width: inherit;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  background-color: #2e2e2e;
+  color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+i{
+  background-color:inherit;
+}
+
+button:hover,
+.file-btn:hover
+, i:hover{
+  background-color: #454545;
+}
+.file-btn input[type="file"] {
+  display: none;
+}
+
+.file-btn span {
+  font-size: 1rem;
+  margin-left: 0.4rem;
+}
