@@ -8,16 +8,24 @@ import {FormStateService} from '../services/form-state.service';
 import {ShapeService} from '../services/shape.service';
 import {HandTool} from '../models/hand.tool';
 import {ResizeTool} from '../models/resize.tool';
-import {SerializeService} from '../services/serialize.service';
+import {ColorDialogComponent} from '../rgb-control/color-dialog/color-dialog.component';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-buttons-interface',
-  imports: [],
+  imports: [
+    ColorDialogComponent,
+    NgIf
+  ],
   templateUrl: './tools-buttons.component.html',
   styleUrl: './tools-buttons.component.css'
 })
 export class ToolsButtonsComponent {
   @Output() clearEvent = new EventEmitter<boolean>;
+  @Output() zoomInEvent = new EventEmitter<boolean>;
+  @Output() zoomOutEvent = new EventEmitter<boolean>;
+  isColorDialog = false;
+
 
   constructor(private drawService: ToolStateService,
               private formState: FormStateService,
@@ -51,6 +59,18 @@ export class ToolsButtonsComponent {
   onResize(){
     this.drawService.setTool(new ResizeTool(this.shapeService))
     this.formState.setToolName('resize');
+  }
+  onZoomIn(){
+    this.zoomInEvent.emit(true);
+  }
+  onZoomOut(){
+    this.zoomOutEvent.emit(true);
+  }
+  onColorChoose(){
+    this.isColorDialog = true;
+  }
+  onColorClose(event: boolean){
+    this.isColorDialog = event;
   }
 
 }

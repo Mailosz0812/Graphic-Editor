@@ -1,7 +1,19 @@
 <div class="project-buttons">
-<label class="file-btn">
-  <i class='bx bx-folder-open'></i>
-  <input type="file" accept=".json" (change)="onChanges($event)">
-</label>
-  <button (click)="onDownload()"><i class='bx  bx-folder-down-arrow'  ></i> </button>
+  <div class="dropdown-item">
+    <button (click)="onFileDropdown()">File</button>
+
+    <div class="dropdown" *ngIf="uploadDropdown">
+      <button (click)="onOpen()" class="dropdown-button">Open</button>
+      <input type="file" #fileInput accept=".json , .jpeg , .ppm , .jpg , .png" (change)="onChange($event)" hidden/>
+
+      <div class="dropdown-item nested">
+        <button (click)="onExportDropdown()" class="dropdown-button">Export</button>
+
+        <div class="dropdown right" *ngIf="isExportDropdown">
+          <button class="dropdown-button" (click)="onExport('jpeg')">JPEG</button>
+          <button class="dropdown-button" (click)="onExport('json')">JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

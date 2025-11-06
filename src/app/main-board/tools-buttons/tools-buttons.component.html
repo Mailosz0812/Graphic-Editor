@@ -1,9 +1,18 @@
 <div class="toolbar">
-  <button (click)="onBrush()"><i class='bx bx-brush'></i></button>
-  <button (click)="onLine()"><i class='bx bx-minus'></i></button>
-  <button (click)="onRectangle()"><i class='bx bx-rectangle-wide'></i></button>
-  <button (click)="onCircle()"><i class='bx bx-circle'></i></button>
-  <button (click)="onClear()"><i class='bx bx-eraser'></i></button>
-  <button (click)="onHand()"><i class='bx bx-hand'></i></button>
-  <button (click)="onResize()"><i class='bx bx-edit'></i></button>
+  <div class="tools-container">
+    <button (click)="onBrush()"><i class='bx bx-brush'></i></button>
+    <button (click)="onLine()"><i class='bx bx-minus'></i></button>
+    <button (click)="onRectangle()"><i class='bx bx-rectangle-wide'></i></button>
+    <button (click)="onCircle()"><i class='bx bx-circle'></i></button>
+    <button (click)="onClear()"><i class='bx bx-eraser'></i></button>
+    <button (click)="onColorChoose()"><i class='bx  bx-eyedropper'    ></i> </button>
+    <app-color-dialog *ngIf="isColorDialog" (closeEvent)="onColorClose($event)"></app-color-dialog>
+    <div id="color-picked"></div>
+    </div>
+  <div class="color-picker-container">
+    <button (click)="onHand()"><i class='bx bx-hand'></i></button>
+    <button (click)="onResize()"><i class='bx bx-edit'></i></button>
+    <button (click)="onZoomIn()"><i class='bx  bx-search-plus'  ></i> </button>
+    <button (click)="onZoomOut()"><i class='bx  bx-search-minus'  ></i> </button>
+  </div>
 </div>

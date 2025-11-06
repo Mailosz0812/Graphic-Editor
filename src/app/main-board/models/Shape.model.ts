@@ -4,13 +4,14 @@ export class ShapeModel {
   id?: number;
   startX: number = 0;
   startY: number = 0;
-  type!: 'rectangle' | 'circle' | 'line';
+  type!: 'rectangle' | 'circle' | 'line' | 'image';
   width?: number;
   height?: number;
   radius?: number;
   endX?: number;
   endY?: number;
   controlPoints: {posX: number, posY: number}[] = []
+  pixelBuffer?: Uint8ClampedArray;
   private _isFocused: boolean = false;
 
   focusPoints(ctx: CanvasRenderingContext2D, drawingService: DrawingService){

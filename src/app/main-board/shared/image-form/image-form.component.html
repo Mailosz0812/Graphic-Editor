@@ -1,0 +1,19 @@
+<div class="overlay" (click)="closeDialog()"></div>
+
+<div class="modal">
+  <h3>Ustawienia eksportu</h3>
+  <form (ngSubmit)="saveAsJpeg()">
+    <div class="input-group">
+      <label>File name</label>
+      <input id="file-name" type="text" name="file-name">
+    </div>
+    <div class="input-group">
+      <label for="compression">Jakość JPEG (0–1)</label>
+      <input id="compression" type="number"  name="jpegQuality"  min="0" max="1">
+    </div>
+    <div class="actions">
+      <button type="button" (click)="closeDialog()">Anuluj</button>
+      <button type="submit">Zapisz</button>
+    </div>
+  </form>
+</div>

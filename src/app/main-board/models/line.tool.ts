@@ -43,8 +43,9 @@ export class LineTool implements ToolInterface{
         posY: endY1
       }
     ];
+    let pixels = drawService.drawLine(startX1,startY1,endY1,endX1,ctx,this.size);
+    shape.pixelBuffer = new Uint8ClampedArray(pixels)
     this.shapeService.addShape(shape);
-    drawService.drawLine(startX1,startY1,endY1,endX1,ctx,this.size);
   }
   draw(params: any, ctx: CanvasRenderingContext2D, drawService: DrawingService): void {
     drawService.drawLine(+params.startX,+params.startY,+params.endY,+params.endX,ctx,this.size);

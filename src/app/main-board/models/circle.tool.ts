@@ -1,6 +1,4 @@
 import {ToolInterface} from './tool.interface';
-import {ToolStateService} from '../services/tool-state.service';
-import {Inject} from '@angular/core';
 import {ShapeService} from '../services/shape.service';
 import {DrawingService} from '../services/drawing.service';
 import {ShapeModel} from './Shape.model';
@@ -43,8 +41,9 @@ export class CircleTool implements ToolInterface{
         posY: this.startY - radius
       },
     ];
+    let array: number[] = drawService.drawCircle(this.startX,this.startY,radius,ctx,this.size);
+    shape.pixelBuffer = new Uint8ClampedArray(array);
     this.shapeService.addShape(shape);
-    drawService.drawCircle(this.startX,this.startY,radius,ctx,this.size);
   }
   draw(params: any, ctx: CanvasRenderingContext2D,drawService: DrawingService): void {
     drawService.drawCircle(+params.centerX,+params.centerY,+params.radius,ctx,this.size);

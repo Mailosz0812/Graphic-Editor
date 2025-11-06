@@ -43,22 +43,19 @@ export class ShapeService {
     }
     return -1;
   }
-  drawAll(ctx: CanvasRenderingContext2D){
+  async drawAll(ctx: CanvasRenderingContext2D){
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-    this._shapes.forEach(shape => {
-      if(shape.type === 'line'){
-        this.drawService.drawLine(shape.startX,shape.startY
-        ,shape.endY!,shape.endX!,ctx,this.size)
+    for (const shape of this._shapes) {
+      if (shape.type === 'line') {
+        this.drawService.drawLine(shape.startX, shape.startY,
+          shape.endY!, shape.endX!, ctx, this.size);
+      } else if (shape.type === 'circle') {
+        this.drawService.drawCircle(shape.startX, shape.startY, shape.radius!, ctx, this.size);
+      } else if (shape.type === 'rectangle') {
+        this.drawService.drawRectangle(shape.startX, shape.startY, shape.width!, shape.height!, ctx, this.size);
       }
-      else if(shape.type === 'circle'){
-        this.drawService.drawCircle(shape.startX,shape.startY,shape.radius!,ctx,this.size)
-      }
-      else if(shape.type === 'rectangle'){
-        this.drawService.drawRectangle(shape.startX,shape.startY,shape.width!,shape.height!,ctx,this.size)
-      }
-    })
+    }
   }
-
   private checkFocusPoints(x: number, y:number, pointsArray: {posX: number, posY: number}[]){
     let pointIndex: number = -1;
     pointsArray.forEach((point,index) => {
@@ -68,6 +65,4 @@ export class ShapeService {
     })
     return pointIndex;
   }
-
-
 }

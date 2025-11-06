@@ -1,0 +1,32 @@
+<div class="overlay" (click)="onCloseEvent()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="color-board">
+      <canvas #board (click)="onColorChoose($event)"></canvas>
+    </div>
+    <div class="form-container">
+      <div class="tabs" role="tablist" aria-label="Color model">
+        <button type="button" class="tab" [class.active]="mode==='rgb'" (click)="mode='rgb'">RGB</button>
+        <button type="button" class="tab" [class.active]="mode==='cmyk'" (click)="mode='cmyk'">CMYK</button>
+      </div>
+      <div class="panel">
+        <form >
+          <div class="rgb-group" *ngIf="mode==='rgb'">
+            <input type="number" name="r" [(ngModel)]="rgb.r" placeholder="R" min="0" max="255">
+            <input type="number" name="g" [(ngModel)]="rgb.g" placeholder="G" min="0" max="255">
+            <input type="number" name="b" [(ngModel)]="rgb.b" placeholder="B" min="0" max="255">
+          </div>
+          <div class="cmyk-group" *ngIf="mode==='cmyk'">
+            <input type="number" name="c" [(ngModel)]="cmyk.c" placeholder="C" min="0" max="100">
+            <input type="number" name="m" [(ngModel)]="cmyk.m" placeholder="M" min="0" max="100">
+            <input type="number" name="y" [(ngModel)]="cmyk.y" placeholder="Y" min="0" max="100">
+            <input type="number" name="k" [(ngModel)]="cmyk.k" placeholder="K" min="0" max="100">
+          </div>
+          <div class="actions">
+            <button type="button" (click)="onCloseEvent()">Close</button>
+            <button type="submit">Choose</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

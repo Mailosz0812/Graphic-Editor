@@ -47,8 +47,9 @@ export class RectTool implements ToolInterface{
         posY: startY1 + height
       }
     ]
+    let pixels = drawService.drawRectangle(startX1,startY1,width,height,ctx,this.size);
+    shape.pixelBuffer = new Uint8ClampedArray(pixels);
     this.shapeService.addShape(shape);
-    drawService.drawRectangle(startX1,startY1,width,height,ctx,this.size);
   }
 
   onMouseClick(drawService: DrawingService, mouse: MouseEvent, ctx: CanvasRenderingContext2D): void {

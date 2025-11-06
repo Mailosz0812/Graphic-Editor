@@ -1,0 +1,7 @@
+<div class="err-dialog" (click)="onClose(false)">
+  <div class="modal">
+    <h2>Error</h2>
+    <p>{{rawError?.message || 'Unexpected error'}} </p>
+    <button (click)="onClose(true)">Close</button>
+  </div>
+</div>

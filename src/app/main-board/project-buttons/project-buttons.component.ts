@@ -1,22 +1,41 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {SerializeService} from '../services/serialize.service';
+// project-buttons.component.ts
+import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-project-buttons',
-  imports: [],
   templateUrl: './project-buttons.component.html',
-  styleUrl: './project-buttons.component.css'
+  imports: [
+    NgIf
+  ],
+  styleUrls: ['./project-buttons.component.css']
 })
 export class ProjectButtonsComponent {
-  @Output() importEvent = new EventEmitter<Event>;
+  @ViewChild("fileInput") private fileInput!: ElementRef<HTMLInputElement>;
+  @Output("openFile") fileEvent = new EventEmitter<HTMLInputElement>();
+  @Output("exportFile") exportEvent = new EventEmitter<string>;
+  uploadDropdown = false;
+  isExportDropdown = false;
 
-  constructor(private serializeService: SerializeService) {}
-
-  onDownload(){
-    this.serializeService.serializeShapes();
+  onFileDropdown() {
+    this.uploadDropdown = !this.uploadDropdown;
+    this.isExportDropdown = false; // close submenus
   }
-  onChanges(event: Event){
-    this.importEvent.emit(event);
+  onOpen() {
+    this.fileInput.nativeElement.click()
   }
-
+  onExportDropdown() {
+    this.isExportDropdown = !this.isExportDropdown;
+  }
+  onExport(type: string) {
+    this.isExportDropdown = false;
+    this.uploadDropdown = false;
+    this.exportEvent.emit(type);
+  }
+  onChange(event: Event){
+    const input = event.target as HTMLInputElement;
+    if(input.files && input.files.length > 0){
+      this.fileEvent.emit(input);
+    }
+  }
 }

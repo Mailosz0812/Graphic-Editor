@@ -1,9 +1,14 @@
 <div class="main-board">
   <div class="col-layout">
-  <app-project-buttons (importEvent)="onImport($event)"/>
+  <app-project-buttons (openFile)="onImport($event)" (exportFile)="onExport($event)"/>
   <div class="full-width">
-    <app-buttons-interface (clearEvent)="onClear($event)" ></app-buttons-interface>
+    <app-buttons-interface (clearEvent)="onClear($event)"
+                           (zoomInEvent)="onZoomIn($event)"
+                           (zoomOutEvent)="onZoomOut($event)"
+    ></app-buttons-interface>
     <app-draw-board #playground></app-draw-board>
+    <app-image-form [canvas]="board.board.nativeElement" (closeDialogEvent)="onCloseDialog($event)" *ngIf="isDialog"></app-image-form>
+    <app-err-dialog [rawError]="lastError" (closeEvent)="onCloseErr($event)" *ngIf="isErrOpen"/>
   </div>
   </div>
   <div class="side-panel">
@@ -12,5 +17,6 @@
     <app-dynamic-form [formFields]="circleFormFields" *ngIf="getStateByToolName('circle')" [formTitle]="'Circle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
     <app-dynamic-form [formFields]="handFormFields" *ngIf="getStateByToolName('hand')" [formTitle]="'Move shape'" (formSubmit)="onSubmit($event)"/>
     <app-dynamic-form [formFields]="resizeFormFields" *ngIf="getStateByToolName('resize')" [formTitle]="'Resize shape'" (formSubmit)="onSubmit($event)"/>
+    <app-rgb-control/>
   </div>
 </div>

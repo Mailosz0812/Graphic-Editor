@@ -1,41 +1,79 @@
-.project-buttons{
+/* === Project Buttons Container === */
+.project-buttons {
   display: flex;
   align-items: center;
   height: 2.5rem;
   margin-left: 3rem;
 }
-button,
-.file-btn {
+
+/* === Base Button Styles === */
+button {
+  width: inherit;
+  height: inherit;
+  font-size: 1.1rem;
+  color: #f0f0f0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #454545;
+}
+
+/* === Dropdown Item === */
+.dropdown-item {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0.75rem;
+  width: 3.2rem;
   height: inherit;
-  font-size: 1.5rem;
+}
+
+/* Nested dropdown item (submenu trigger) */
+.dropdown-item.nested {
+  width: inherit;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: inherit;
+}
+
+/* === Dropdown Menu === */
+.dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 4rem;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Dropdown positioned to the right of its parent */
+.dropdown.right {
+  top: 0;
+  left: 100%;
+  margin-left: 2px;
+}
+
+/* === Dropdown Buttons === */
+.dropdown-button {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  text-align: center;
   color: #f0f0f0;
+  background: none;
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-button:hover,
-.file-btn:hover{
-  background-color: #454545;
-}
-i {
-  background-color: inherit;
-}
-.dummy-item:hover{
-  background-color: #2b2b2b;
-  cursor: pointer;
+.dropdown-button:hover {
+  background-color: #555;
 }
 
-
-.file-btn input[type="file"] {
-  display: none;
-}
-
-.file-btn span {
-  font-size: 1rem;
-  margin-left: 0.4rem;
-}

@@ -1,8 +1,11 @@
+<div class="wrapper">
 <canvas #playground
         (click)="onMouseClick($event)"
         (mousedown)="onMouseDown($event)"
         (mousemove)="onMouseMove($event)"
         (mouseup)="onMouseUp($event)"
+        (wheel)="onWheel($event)"
         class="playground">
 </canvas>
 
+</div>

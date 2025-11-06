@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, viewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, viewChild} from '@angular/core';
 import {DrawBoardComponent} from './draw-board/draw-board.component';
 import {ToolsButtonsComponent} from './tools-buttons/tools-buttons.component';
 import {DynamicFormComponent} from './shared/dynamic-form/dynamic-form.component';
@@ -12,6 +12,11 @@ import {DrawingService} from './services/drawing.service';
 import {ShapeService} from './services/shape.service';
 import {SerializeService} from './services/serialize.service';
 import {ProjectButtonsComponent} from './project-buttons/project-buttons.component';
+import {ImageFormComponent} from './shared/image-form/image-form.component';
+import {RgbControlComponent} from './rgb-control/rgb-control.component';
+import {ErrorBusService, UIError} from './errorHandling/error-bus.service';
+import {Subscription, throttleTime} from 'rxjs';
+import {ErrDialogComponent} from './errorHandling/err-dialog/err-dialog.component';
 
 @Component({
   selector: 'app-main-board',
@@ -20,13 +25,17 @@ import {ProjectButtonsComponent} from './project-buttons/project-buttons.compone
     ToolsButtonsComponent,
     DynamicFormComponent,
     NgIf,
-    ProjectButtonsComponent
+    ProjectButtonsComponent,
+    ImageFormComponent,
+    RgbControlComponent,
+    ErrDialogComponent
   ],
   templateUrl: './main-board.component.html',
   styleUrl: './main-board.component.css'
 })
 export class MainBoardComponent implements OnInit{
   @ViewChild("playground") board!: DrawBoardComponent;
+  isDialog: boolean = false;
   statesMap: {tool: string, formState: boolean}[]=[
     {
       tool: 'brush',
@@ -143,13 +152,26 @@ export class MainBoardComponent implements OnInit{
     }
   ]
   private activeTool!: ToolInterface | null;
+  private errSub!: Subscription;
+  lastError: UIError | null = null;
+  isErrOpen: boolean = false;
+  isColorDialog: boolean = false;
   constructor(private formState: FormStateService,private toolStateService: ToolStateService
               ,private drawService: DrawingService
               ,private shapeService: ShapeService
-              ,private serializeService: SerializeService) {
+              ,private serializeService: SerializeService
+              ,private errBus: ErrorBusService) {
     this.toolStateService._activeTool.subscribe(tool => {
       this.activeTool = tool;
     })
+  }
+  private openErrorDialog(error: UIError){
+    if(this.isErrOpen) return;
+    if(!error){
+      return;
+    }
+    this.lastError = error;
+    this.isErrOpen = true;
   }
   ngOnInit(): void {
     this.formState._stateSub.subscribe(toolName => {
@@ -157,18 +179,61 @@ export class MainBoardComponent implements OnInit{
         state.formState = state.tool === toolName;
       })
     });
+    this.errSub = this.errBus.errors
+      .pipe(throttleTime(300, undefined, { leading: true, trailing: true }))
+      .subscribe(err => this.openErrorDialog(err));
+  }
+  onCloseErr(event: boolean){
+    this.isErrOpen = false;
   }
   onClear(event: boolean){
     this.board.onClearBoard();
     this.shapeService.deleteShapes();
   }
-  onImport(event: Event){
-    this.serializeService.deserializeShapes(event,this.board.canvasRender);
+  onZoomIn(event: boolean){
+    let arr = this.board.zoomIn();
+    let ctx = this.board.canvasRender;
+    let width = this.board.board.nativeElement.width
+    let height = this.board.board.nativeElement.height
+    let imageData = new ImageData(arr,width,height);
+    ctx.putImageData(imageData,0,0);
+  }
+  onZoomOut(event: boolean){
+    let arr = this.board.zoomOut();
+    let ctx = this.board.canvasRender;
+    let width = this.board.board.nativeElement.width
+    let height = this.board.board.nativeElement.height
+    let imageData = new ImageData(arr,width,height);
+    ctx.putImageData(imageData,0,0);
+  }
+  async onImport(event: HTMLInputElement){
+    let imageInfo: {width: number, height: number, array: Uint8ClampedArray} = await this.serializeService.deserializeShapes(event,this.board.canvasRender);
+    if(imageInfo.array) {
+      this.board.drawInitImage(imageInfo);
+    }
+  }
+  onExport(event: String){
+    if(event === 'jpeg'){
+      this.isDialog = true;
+    }
+    else {
+      this.serializeService.serializeShapes(event);
+    }
   }
   onSubmit(params: any){
     const ctx = this.board.canvasRender;
     this.activeTool?.draw(params,ctx,this.drawService);
   }
+  onCloseDialog(event: boolean){
+    this.isDialog = event;
+  }
+  onColorChoose(event: boolean){
+    this.isColorDialog = event;
+  }
+  onColorClose(event: boolean){
+    this.isColorDialog = event;
+  }
+
   getStateByToolName(toolName: string): boolean{
     const state = this.statesMap.find(s => s.tool === toolName);
     return state ? state.formState : false;
