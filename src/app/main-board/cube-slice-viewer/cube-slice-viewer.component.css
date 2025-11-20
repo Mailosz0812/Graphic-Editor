@@ -1,0 +1,78 @@
+.slice-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #5a5a5a;
+  border-radius: 8px;
+}
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.slice-canvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  background: #1a1a1a;
+  display: block;
+}
+
+h4 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.radio-group {
+  display: flex;
+  justify-content: space-around;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+.axis-label {
+  position: absolute;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.x-axis {
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.y-axis {
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left top;
+  margin-top: 20px;
+}
+
+.fixed-axis {
+  top: 8px;
+  right: 8px;
+  background: rgba(40, 40, 40, 0.8);
+}

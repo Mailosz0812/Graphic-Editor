@@ -17,6 +17,8 @@ import {RgbControlComponent} from './rgb-control/rgb-control.component';
 import {ErrorBusService, UIError} from './errorHandling/error-bus.service';
 import {Subscription, throttleTime} from 'rxjs';
 import {ErrDialogComponent} from './errorHandling/err-dialog/err-dialog.component';
+import {CubeSliceViewerComponent} from './cube-slice-viewer/cube-slice-viewer.component';
+import {SliceStateService} from './services/slice-state.service';
 
 @Component({
   selector: 'app-main-board',
@@ -28,7 +30,8 @@ import {ErrDialogComponent} from './errorHandling/err-dialog/err-dialog.componen
     ProjectButtonsComponent,
     ImageFormComponent,
     RgbControlComponent,
-    ErrDialogComponent
+    ErrDialogComponent,
+    CubeSliceViewerComponent
   ],
   templateUrl: './main-board.component.html',
   styleUrl: './main-board.component.css'
@@ -59,6 +62,10 @@ export class MainBoardComponent implements OnInit{
     },
     {
       tool: 'resize',
+      formState: false
+    },
+    {
+      tool: 'cube',
       formState: false
     }
   ];
@@ -160,7 +167,8 @@ export class MainBoardComponent implements OnInit{
               ,private drawService: DrawingService
               ,private shapeService: ShapeService
               ,private serializeService: SerializeService
-              ,private errBus: ErrorBusService) {
+              ,private errBus: ErrorBusService
+              ,private sliceState: SliceStateService) {
     this.toolStateService._activeTool.subscribe(tool => {
       this.activeTool = tool;
     })
@@ -178,6 +186,7 @@ export class MainBoardComponent implements OnInit{
       this.statesMap.forEach(state => {
         state.formState = state.tool === toolName;
       })
+      this.sliceState.setEnabled(toolName === 'cube');
     });
     this.errSub = this.errBus.errors
       .pipe(throttleTime(300, undefined, { leading: true, trailing: true }))

@@ -48,7 +48,8 @@ export class ShapeService {
     for (const shape of this._shapes) {
       if (shape.type === 'line') {
         this.drawService.drawLine(shape.startX, shape.startY,
-          shape.endY!, shape.endX!, ctx, this.size);
+          shape.endY!, shape.endX!, ctx, this.size,
+          189, 168, 168);
       } else if (shape.type === 'circle') {
         this.drawService.drawCircle(shape.startX, shape.startY, shape.radius!, ctx, this.size);
       } else if (shape.type === 'rectangle') {

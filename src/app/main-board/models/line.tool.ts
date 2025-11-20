@@ -21,8 +21,6 @@ export class LineTool implements ToolInterface{
   onMouseClick(drawService: DrawingService, mouse: MouseEvent, ctx: CanvasRenderingContext2D): void {
   }
 
-
-
   onMouseUp(drawService: DrawingService, mouse: MouseEvent, ctx: CanvasRenderingContext2D): void {
     const startX1 = Math.floor(this.startX);
     const startY1 = Math.floor(this.startY);
@@ -43,12 +41,13 @@ export class LineTool implements ToolInterface{
         posY: endY1
       }
     ];
-    let pixels = drawService.drawLine(startX1,startY1,endY1,endX1,ctx,this.size);
+    let pixels = drawService.drawLine(startX1,startY1,endY1,endX1,ctx,this.size,189, 168, 168);
     shape.pixelBuffer = new Uint8ClampedArray(pixels)
     this.shapeService.addShape(shape);
   }
   draw(params: any, ctx: CanvasRenderingContext2D, drawService: DrawingService): void {
-    drawService.drawLine(+params.startX,+params.startY,+params.endY,+params.endX,ctx,this.size);
+    drawService.drawLine(+params.startX,+params.startY,+params.endY,+params.endX,ctx,this.size,
+      189, 168, 168);
   }
 
 }

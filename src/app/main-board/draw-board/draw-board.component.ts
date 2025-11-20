@@ -24,6 +24,8 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
   startHeight: number = 0;
   startWidth: number = 0;
   srcArray?: Uint8ClampedArray;
+  private srcW = 0;
+  private srcH = 0;
 
 
   constructor(private toolStateService: ToolStateService, private drawingService: DrawingService,private colorsState: ColorsStateService) {}
@@ -82,11 +84,11 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
   }
   drawInitImage(imageInfo: {width: number, height: number, array: Uint8ClampedArray}){
     if(imageInfo.width !== 0 && imageInfo.height !== 0) {
-      this.startHeight = imageInfo.height;
-      this.startWidth = imageInfo.width;
+      this.srcW = imageInfo.width;
+      this.srcH = imageInfo.height;
       this.srcArray = imageInfo.array;
       let canvas = this.canvasRender.canvas;
-      if (canvas.height > imageInfo.height && canvas.width > imageInfo.width) {
+      if (this.startHeight > imageInfo.height && this.startWidth > imageInfo.width) {
         canvas.width = imageInfo.width;
         canvas.height = imageInfo.height;
         canvas.style.width = `${imageInfo.width}px`;
@@ -107,8 +109,8 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
   ): Uint8ClampedArray {
     const viewW = this.board.nativeElement.width;
     const viewH = this.board.nativeElement.height;
-    const srcW = this.startWidth;
-    const srcH = this.startHeight;
+    const srcW = this.srcW;
+    const srcH = this.srcH;
     const dst = new Uint8ClampedArray(viewW * viewH * 4);
     for (let y = 0; y < viewH; y++) {
       for (let x = 0; x < viewW; x++) {

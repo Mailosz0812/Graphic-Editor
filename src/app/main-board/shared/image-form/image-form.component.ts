@@ -32,8 +32,8 @@ export class ImageFormComponent {
 
     const baseName = (nameEl?.value ?? '').trim() || 'image';
     let quality = parseFloat(qualEl?.value ?? '');
-    if (Number.isNaN(quality)) quality = 0.92;     // sensowna domyślna jakość
-    quality = Math.min(1, Math.max(0, quality));   // clamp 0..1
+    if (Number.isNaN(quality)) quality = 0.92;
+    quality = Math.min(1, Math.max(0, quality));
 
     if (!this.canvas) {
       console.error('Canvas is not provided to ImageFormComponent');
@@ -41,11 +41,8 @@ export class ImageFormComponent {
     }
 
     try {
-      // UWAGA: jeśli na canvasie są obrazy z innego źródła bez CORS,
-      // toBlob może zwrócić null (tainted canvas).
       const blob = await this.canvasToBlob(this.canvas, 'image/jpeg', quality);
 
-      // przygotuj i "kliknij" link do pobrania
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -57,7 +54,6 @@ export class ImageFormComponent {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      // opcjonalnie zamknij dialog po zapisie:
       this.closeDialog();
     } catch (err) {
       console.error('Saving JPEG failed:', err);

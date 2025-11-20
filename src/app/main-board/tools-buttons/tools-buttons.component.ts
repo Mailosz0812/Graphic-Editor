@@ -1,15 +1,20 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {ToolStateService} from '../services/tool-state.service';
-import {BrushTool} from '../models/brush.tool';
-import {LineTool} from '../models/line.tool';
-import {RectTool} from '../models/rect.tool';
-import {CircleTool} from '../models/circle.tool';
-import {FormStateService} from '../services/form-state.service';
-import {ShapeService} from '../services/shape.service';
-import {HandTool} from '../models/hand.tool';
-import {ResizeTool} from '../models/resize.tool';
-import {ColorDialogComponent} from '../rgb-control/color-dialog/color-dialog.component';
-import {NgIf} from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ToolStateService } from '../services/tool-state.service';
+import { BrushTool } from '../models/brush.tool';
+import { LineTool } from '../models/line.tool';
+import { RectTool } from '../models/rect.tool';
+import { CircleTool } from '../models/circle.tool';
+import { FormStateService } from '../services/form-state.service';
+import { ShapeService } from '../services/shape.service';
+import { HandTool } from '../models/hand.tool';
+import { ResizeTool } from '../models/resize.tool';
+import { ColorDialogComponent } from '../rgb-control/color-dialog/color-dialog.component';
+import { NgIf } from '@angular/common';
+
+import { SliceStateService } from '../services/slice-state.service';
+import { BrushColorService } from '../services/brush-color.service'; // <-- 1. IMPORT
+import { ToolInterface } from '../models/tool.interface';
+import {RgbCubeTool} from '../models/rgbCube.tool';
 
 @Component({
   selector: 'app-buttons-interface',
@@ -26,16 +31,28 @@ export class ToolsButtonsComponent {
   @Output() zoomOutEvent = new EventEmitter<boolean>;
   isColorDialog = false;
 
+  private activeTool: ToolInterface | null = null;
 
   constructor(private drawService: ToolStateService,
               private formState: FormStateService,
-              private shapeService: ShapeService) {
+              private shapeService: ShapeService,
+              private sliceState: SliceStateService,
+              private brushColorService: BrushColorService) {
+
+
+    this.drawService._activeTool.subscribe(tool => {
+      if (this.activeTool && this.activeTool instanceof BrushTool) {
+        this.activeTool.destroy();
+      }
+      this.activeTool = tool;
+    });
   }
 
-  onBrush(){
-    this.drawService.setTool(new BrushTool());
+  onBrush() {
+    this.drawService.setTool(new BrushTool(this.brushColorService));
     this.formState.setToolName('brush');
   }
+
   onLine(){
     this.drawService.setTool(new LineTool(this.shapeService));
     this.formState.setToolName('line');
@@ -56,6 +73,10 @@ export class ToolsButtonsComponent {
     this.drawService.setTool(new HandTool(this.shapeService));
     this.formState.setToolName('hand');
   }
+  onCube() {
+    this.drawService.setTool(new RgbCubeTool(this.shapeService, this.sliceState));
+    this.formState.setToolName('cube');
+  }
   onResize(){
     this.drawService.setTool(new ResizeTool(this.shapeService))
     this.formState.setToolName('resize');
@@ -72,5 +93,4 @@ export class ToolsButtonsComponent {
   onColorClose(event: boolean){
     this.isColorDialog = event;
   }
-
 }

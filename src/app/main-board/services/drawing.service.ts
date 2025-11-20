@@ -22,8 +22,10 @@ export class DrawingService {
     canvasRender.putImageData(data,posX,posY);
     return imageData;
   }
-  drawLine(startX:number,startY:number,endY:number,endX:number
-    ,ctx: CanvasRenderingContext2D,size: number): number[]{
+
+  drawLine(startX:number,startY:number,endY:number,endX:number,
+           ctx: CanvasRenderingContext2D, size: number,
+           r: number, g: number, b: number): number[]{
 
     let pointsArray: number[] = [];
     let dx = Math.abs(endX - startX);
@@ -32,7 +34,7 @@ export class DrawingService {
     let sy = startY < endY ? 1 : -1;
     let err = dx - dy;
     while(true){
-      pointsArray.push(... this.drawPixel(startX, startY, ctx,size,189,168,168));
+      pointsArray.push(... this.drawPixel(startX, startY, ctx,size,r,g,b));
 
       if (startX === endX && startY === endY) break;
 
@@ -54,10 +56,10 @@ export class DrawingService {
     const rightTopX = startX + width;
     const leftBottomY = startY + height;
     let pointsArray:number [] = [];
-    pointsArray.push(... this.drawLine(startX,startY,startY,rightTopX,ctx,size));
-    pointsArray.push(... this.drawLine(startX,startY,leftBottomY,startX,ctx,size));
-    pointsArray.push(... this.drawLine(rightTopX,startY,leftBottomY, rightTopX,ctx,size));
-    pointsArray.push(... this.drawLine(startX,leftBottomY,leftBottomY,rightTopX,ctx,size));
+    pointsArray.push(... this.drawLine(startX,startY,startY,rightTopX,ctx,size, 189, 168, 168));
+    pointsArray.push(... this.drawLine(startX,startY,leftBottomY,startX,ctx,size, 189, 168, 168));
+    pointsArray.push(... this.drawLine(rightTopX,startY,leftBottomY, rightTopX,ctx,size, 189, 168, 168));
+    pointsArray.push(... this.drawLine(startX,leftBottomY,leftBottomY,rightTopX,ctx,size, 189, 168, 168));
     return pointsArray;
   }
   drawCircle(centerX: number,centerY:number, radius: number,ctx: CanvasRenderingContext2D,size: number): number[]{

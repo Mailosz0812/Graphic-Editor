@@ -1,0 +1,40 @@
+<div class="slice-controls">
+  <h4>Przekrój kostki</h4>
+
+  <div class="canvas-wrapper">
+    <canvas #sliceCanvas class="slice-canvas"></canvas>
+
+    <label class="axis-label x-axis">{{ getAxisLabel('u') }}</label>
+
+    <label class="axis-label y-axis">{{ getAxisLabel('v') }}</label>
+
+    <label class="axis-label fixed-axis">
+      {{ sliceAxis.toUpperCase() }} = {{ sliceValue }}%
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>Oś przekroju:</label>
+    <div class="radio-group">
+      <label *ngFor="let axis of ['x', 'y', 'z']">
+        <input
+          type="radio"
+          name="sliceAxis"
+          [value]="axis"
+          [(ngModel)]="sliceAxis"
+          (change)="onSettingsChange()">
+        {{ axis.toUpperCase() }}
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Wartość ({{ sliceValue }}%):</label>
+    <input
+      type="range"
+      min="0"
+      max="100"
+      [(ngModel)]="sliceValue"
+      (input)="onSettingsChange()">
+  </div>
+</div>

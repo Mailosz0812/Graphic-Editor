@@ -17,6 +17,7 @@
     <app-dynamic-form [formFields]="circleFormFields" *ngIf="getStateByToolName('circle')" [formTitle]="'Circle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
     <app-dynamic-form [formFields]="handFormFields" *ngIf="getStateByToolName('hand')" [formTitle]="'Move shape'" (formSubmit)="onSubmit($event)"/>
     <app-dynamic-form [formFields]="resizeFormFields" *ngIf="getStateByToolName('resize')" [formTitle]="'Resize shape'" (formSubmit)="onSubmit($event)"/>
+    <app-cube-slice-viewer *ngIf="getStateByToolName('cube')"></app-cube-slice-viewer>
     <app-rgb-control/>
   </div>
 </div>
