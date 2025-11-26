@@ -8,6 +8,10 @@
     <button (click)="onCube()"><i class='bx bx-cube'></i></button>
     <button (click)="onColorChoose()"><i class='bx  bx-eyedropper'    ></i> </button>
     <app-color-dialog *ngIf="isColorDialog" (closeEvent)="onColorClose($event)"></app-color-dialog>
+    <button (click)="onPointTransform()"><i class='bx  bx-slider'></i></button>
+    <button (click)="onFilterDialog()"><i class='bx  bx-filter'></i></button>
+    <app-filter-dialog *ngIf="isFilterDialog" (closeEvent)="onFilterClose($event)"></app-filter-dialog>
+
     <div id="color-picked"></div>
     </div>
   <div class="color-picker-container">

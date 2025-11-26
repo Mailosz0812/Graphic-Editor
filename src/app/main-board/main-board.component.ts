@@ -19,6 +19,8 @@ import {Subscription, throttleTime} from 'rxjs';
 import {ErrDialogComponent} from './errorHandling/err-dialog/err-dialog.component';
 import {CubeSliceViewerComponent} from './cube-slice-viewer/cube-slice-viewer.component';
 import {SliceStateService} from './services/slice-state.service';
+import {PointTransformationComponent} from './rgb-control/point-transformation/point-transformation.component';
+import {ImageStateService} from './services/image-state.service';
 
 @Component({
   selector: 'app-main-board',
@@ -31,7 +33,8 @@ import {SliceStateService} from './services/slice-state.service';
     ImageFormComponent,
     RgbControlComponent,
     ErrDialogComponent,
-    CubeSliceViewerComponent
+    CubeSliceViewerComponent,
+    PointTransformationComponent
   ],
   templateUrl: './main-board.component.html',
   styleUrl: './main-board.component.css'
@@ -66,6 +69,10 @@ export class MainBoardComponent implements OnInit{
     },
     {
       tool: 'cube',
+      formState: false
+    },
+    {
+      tool: 'pointTransform',
       formState: false
     }
   ];
@@ -168,7 +175,8 @@ export class MainBoardComponent implements OnInit{
               ,private shapeService: ShapeService
               ,private serializeService: SerializeService
               ,private errBus: ErrorBusService
-              ,private sliceState: SliceStateService) {
+              ,private sliceState: SliceStateService,
+              private imageState: ImageStateService) {
     this.toolStateService._activeTool.subscribe(tool => {
       this.activeTool = tool;
     })
@@ -218,6 +226,7 @@ export class MainBoardComponent implements OnInit{
   async onImport(event: HTMLInputElement){
     let imageInfo: {width: number, height: number, array: Uint8ClampedArray} = await this.serializeService.deserializeShapes(event,this.board.canvasRender);
     if(imageInfo.array) {
+      this.imageState.setImageState(imageInfo);
       this.board.drawInitImage(imageInfo);
     }
   }

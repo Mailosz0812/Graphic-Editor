@@ -1,0 +1,72 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  box-sizing: border-box;
+}
+.pixel-state{
+  height: 13rem;
+  width: 13rem;
+  border-radius: 10px;
+  border: 1px solid #5c5c5c;;
+}
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem
+}
+
+.input-group{
+  display: flex;
+  gap: 0.5rem;
+  align-items:center;
+}
+.input-channels{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.red-channel input[type="range"] {
+  accent-color: #ff4d4d;
+}
+.red-channel label {
+  color: #ff4d4d;
+}
+
+.green-channel input[type="range"] {
+  accent-color: #2ecc71;
+}
+.green-channel label {
+  color: #2ecc71;
+}
+
+.blue-channel input[type="range"] {
+  accent-color: #3498db;
+}
+.blue-channel label {
+  color: #3498db;
+}
+.grayscale-buttons{
+  display: flex;
+  flex-direction: column;
+  gap:1rem
+}
+button {
+  padding: 0.5rem;
+  background-color: #4a4a4a;
+  color: #e6e6e6;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid #5a5a5a;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+.operation-select{
+}
+.operation-select > select{
+  margin-left: 10px;
+  padding: 0.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}

@@ -21,7 +21,7 @@
   min-width: 260px;
   max-width: 320px;
   border-left: 1px solid #505050;
-  padding: 1rem;
+  padding-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

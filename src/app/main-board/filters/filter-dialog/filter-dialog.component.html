@@ -1,0 +1,18 @@
+<div class="overlay" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="filters-list">
+      <h3>Filters</h3>
+      <ul>
+        <li (click)="onBoxBlur()">Box Blur</li>
+        <li (click)="onMedian()">Median</li>
+        <li (click)="onSobel()">Sobel</li>
+        <li (click)="onHigh()">High-pass</li>
+        <li (click)="onGaussian()">Gaussian Blur</li>
+      </ul>
+      <button (click)="onCancel()">Cancel</button>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas class="view" #playground></canvas>
+    </div>
+  </div>
+</div>

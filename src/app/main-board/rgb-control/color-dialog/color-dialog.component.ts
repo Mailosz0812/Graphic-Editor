@@ -21,15 +21,12 @@ export class ColorDialogComponent implements AfterViewInit {
   mode: 'rgb' | 'cmyk' = 'rgb';
   private palletData!: { data: Uint8ClampedArray, width: number, height: number };
 
-  // Przechowujemy wartości RGB i CMYK
   rgb: RgbColor = { r: 0, g: 0, b: 0 };
   cmyk: CmykColor = { c: 0, m: 0, y: 0, k: 100 };
 
-  // Flaga zapobiegająca pętlom aktualizacji (gdy RGB zmienia CMYK, a CMYK zmienia RGB)
   private isUpdating = false;
 
   constructor(private brushColorService: BrushColorService) {
-    // Pobierz kolor początkowy z usługi
     this.rgb = this.brushColorService.getColor();
     this.cmyk = this.rgbToCmyk(this.rgb.r, this.rgb.g, this.rgb.b);
   }
@@ -48,9 +45,6 @@ export class ColorDialogComponent implements AfterViewInit {
     this.closeEvent.emit(false);
   }
 
-  /**
-   * Wywoływane przy wyborze koloru z palety HSV (myszą)
-   */
   onColorChoose(mouse: MouseEvent) {
     let posY: number = mouse.offsetY;
     let posX: number = mouse.offsetX;
@@ -62,9 +56,6 @@ export class ColorDialogComponent implements AfterViewInit {
     this.updateFromRgb(r, g, b);
   }
 
-  /**
-   * Wywoływane, gdy zmienią się wartości RGB (suwak lub pole tekstowe)
-   */
   onRgbChange() {
     if (this.isUpdating) return;
     this.isUpdating = true;
@@ -78,14 +69,10 @@ export class ColorDialogComponent implements AfterViewInit {
     this.isUpdating = false;
   }
 
-  /**
-   * Wywoływane, gdy zmienią się wartości CMYK (pole tekstowe)
-   */
   onCmykChange() {
     if (this.isUpdating) return;
     this.isUpdating = true;
 
-    // Walidacja 0-100
     this.cmyk.c = Math.min(100, Math.max(0, this.cmyk.c || 0));
     this.cmyk.m = Math.min(100, Math.max(0, this.cmyk.m || 0));
     this.cmyk.y = Math.min(100, Math.max(0, this.cmyk.y || 0));
@@ -95,25 +82,19 @@ export class ColorDialogComponent implements AfterViewInit {
     this.isUpdating = false;
   }
 
-  /**
-   * Źródło prawdy dla aktualizacji z RGB
-   */
   private updateFromRgb(r: number, g: number, b: number) {
     this.rgb = { r, g, b };
     this.cmyk = this.rgbToCmyk(r, g, b);
-    this.brushColorService.setColor(this.rgb); // <-- AKTUALIZACJA W CZASIE RZECZYWISTYM
+    this.brushColorService.setColor(this.rgb);
   }
 
-  /**
-   * Źródło prawdy dla aktualizacji z CMYK
-   */
+
   private updateFromCmyk(c: number, m: number, y: number, k: number) {
     this.cmyk = { c, m, y, k };
     this.rgb = this.cmykToRgb(c, m, y, k);
-    this.brushColorService.setColor(this.rgb); // <-- AKTUALIZACJA W CZASIE RZECZYWISTYM
+    this.brushColorService.setColor(this.rgb);
   }
 
-  // --- LOGIKA KONWERSJI ---
 
   private rgbToCmyk(r: number, g: number, b: number): CmykColor {
     let rPrime = r / 255;
@@ -138,9 +119,6 @@ export class ColorDialogComponent implements AfterViewInit {
     };
   }
 
-  /**
-   * NOWA FUNKCJA: Konwersja CMYK -> RGB
-   */
   private cmykToRgb(c: number, m: number, y: number, k: number): RgbColor {
     const kNorm = k / 100;
     const cNorm = c / 100;
@@ -158,7 +136,6 @@ export class ColorDialogComponent implements AfterViewInit {
     };
   }
 
-  // Funkcje z palety HSV (bez zmian)
   private hsvToRgb(h: number, s: number, v: number) {
     const c = v * s;
     const x = c * (1 - Math.abs((h / 60) % 2 - 1));

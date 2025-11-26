@@ -64,7 +64,6 @@
   z-index: 1;
 }
 
-/* Style panelu (bez zmian) */
 .panel{
   background: var(--panel-bg);
   border: 1px solid var(--border);

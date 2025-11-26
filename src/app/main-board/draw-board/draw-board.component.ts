@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy,  ViewChild} from '@angular/core';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {ToolStateService} from '../services/tool-state.service';
 import {ToolInterface} from '../models/tool.interface';
 import {DrawingService} from '../services/drawing.service';
 import {ColorsStateService} from '../services/colors-state.service';
+import {ImageStateService} from '../services/image-state.service';
 
 @Component({
   selector: 'app-draw-board',
@@ -28,7 +29,7 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
   private srcH = 0;
 
 
-  constructor(private toolStateService: ToolStateService, private drawingService: DrawingService,private colorsState: ColorsStateService) {}
+  constructor(private toolStateService: ToolStateService, private drawingService: DrawingService,private colorsState: ColorsStateService,private imageState: ImageStateService) {}
 
   ngAfterViewInit() {
     const canvas = this.board.nativeElement;
@@ -40,12 +41,27 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
     this.startWidth = canvas.width;
     this.ToolSub = this.toolStateService._activeTool.subscribe(tool => {
       this.activeTool = tool;
+    });
+    this.imageState._imageState.subscribe(imageInfo => {
+      if(imageInfo) {
+        this.srcW = imageInfo.width;
+        this.srcH = imageInfo.height;
+        this.updateDisplay(imageInfo.array)
+      }
     })
+
   }
   ngOnDestroy(): void {
     this.ToolSub.unsubscribe();
   }
+
+  updateDisplay(data: Uint8ClampedArray) {
+    const imageData = new ImageData(data, this.srcW, this.srcH);
+    this.canvasRender.putImageData(imageData, 0, 0);
+  }
+
   onMouseClick(mouse: MouseEvent){
+    this.colorsState.setRGBClick(this.getRGBAValue(mouse.offsetX,mouse.offsetY))
     this.activeTool?.onMouseClick(this.drawingService,mouse,this.canvasRender)
   }
   onMouseDown(mouse: MouseEvent){
@@ -87,6 +103,13 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
       this.srcW = imageInfo.width;
       this.srcH = imageInfo.height;
       this.srcArray = imageInfo.array;
+
+      this.imageState.setImageState({
+        width: this.srcW,
+        height: this.srcH,
+        array: this.srcArray
+      });
+
       let canvas = this.canvasRender.canvas;
       if (this.startHeight > imageInfo.height && this.startWidth > imageInfo.width) {
         canvas.width = imageInfo.width;
@@ -137,17 +160,21 @@ export class DrawBoardComponent implements AfterViewInit, OnDestroy{
     }
     return dst;
   }
-  private getRGBAValue(posX: number, posY: number): {r: number, g: number, b:number}{
-    let sw = this.board.nativeElement.width;
-    let arr = this.canvasRender.getImageData(0,0,sw,this.board.nativeElement.height).data;
-    let arrPos = ((sw * posY) + posX) * 4;
-    let r = arr[arrPos];
-    let g = arr[arrPos + 1];
-    let b = arr[arrPos + 2];
-    if(!r || !g || !b){
-      return {r: 0,g: 0,b: 0};
+  private getRGBAValue(posX: number, posY: number): {r: number, g: number, b: number} {
+    const x = Math.floor(posX);
+    const y = Math.floor(posY);
+
+    if (x < 0 || y < 0 || x >= this.board.nativeElement.width || y >= this.board.nativeElement.height) {
+      return {r: 0, g: 0, b: 0};
     }
-    return {r,g,b};
+
+    const pixelData = this.canvasRender.getImageData(x, y, 1, 1).data;
+
+    return {
+      r: pixelData[0],
+      g: pixelData[1],
+      b: pixelData[2]
+    };
   }
   onClearBoard(){
     this.canvasRender.clearRect(0,0,this.board.nativeElement.width,this.board.nativeElement.height);

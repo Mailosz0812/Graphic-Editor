@@ -12,15 +12,18 @@ import { ColorDialogComponent } from '../rgb-control/color-dialog/color-dialog.c
 import { NgIf } from '@angular/common';
 
 import { SliceStateService } from '../services/slice-state.service';
-import { BrushColorService } from '../services/brush-color.service'; // <-- 1. IMPORT
+import { BrushColorService } from '../services/brush-color.service';
 import { ToolInterface } from '../models/tool.interface';
 import {RgbCubeTool} from '../models/rgbCube.tool';
+import {PointTransformTool} from '../models/pointTransform.tool';
+import {FilterDialogComponent} from '../filters/filter-dialog/filter-dialog.component';
 
 @Component({
   selector: 'app-buttons-interface',
   imports: [
     ColorDialogComponent,
-    NgIf
+    NgIf,
+    FilterDialogComponent,
   ],
   templateUrl: './tools-buttons.component.html',
   styleUrl: './tools-buttons.component.css'
@@ -30,6 +33,7 @@ export class ToolsButtonsComponent {
   @Output() zoomInEvent = new EventEmitter<boolean>;
   @Output() zoomOutEvent = new EventEmitter<boolean>;
   isColorDialog = false;
+  isFilterDialog = false;
 
   private activeTool: ToolInterface | null = null;
 
@@ -81,6 +85,13 @@ export class ToolsButtonsComponent {
     this.drawService.setTool(new ResizeTool(this.shapeService))
     this.formState.setToolName('resize');
   }
+  onPointTransform() {
+    this.drawService.setTool(new PointTransformTool())
+    this.formState.setToolName('pointTransform')
+  }
+  onFilterDialog(){
+    this.isFilterDialog = true;
+  }
   onZoomIn(){
     this.zoomInEvent.emit(true);
   }
@@ -92,5 +103,8 @@ export class ToolsButtonsComponent {
   }
   onColorClose(event: boolean){
     this.isColorDialog = event;
+  }
+  onFilterClose(event: boolean){
+    this.isFilterDialog = event;
   }
 }

@@ -41,6 +41,4 @@ export class RgbControlComponent implements AfterViewInit, OnDestroy{
     this.colorsSub.unsubscribe();
   }
 
-
-
 }

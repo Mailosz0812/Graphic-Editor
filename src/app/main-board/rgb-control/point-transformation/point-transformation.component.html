@@ -1,0 +1,61 @@
+<div class="point-transform">
+  <div class="container">
+    <h3>Point transformation</h3>
+    <div class="operation-select">
+      <label>Operation:</label>
+      <select [ngModel]="currentOperation"
+              (ngModelChange)="onOperationChange($event)"
+              [ngModelOptions]="{standalone: true}">
+        <option value="add">Adding</option>
+        <option value="subtract">Subtracting</option>
+        <option value="multiply">Multiplying</option>
+        <option value="divide">Dividing</option>
+        <option value="brightness">Brightness</option>
+      </select>
+    </div>
+
+    <form>
+      <div class="input-channels" *ngIf="currentOperation !== 'brightness'">
+        <div class="input-group red-channel">
+          <label>R</label>
+          <input type="range" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="rChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+          <input type="number" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="rChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="input-group green-channel">
+          <label >G</label>
+          <input type="range" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="gChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+          <input type="number" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="gChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="input-group blue-channel">
+          <label >B</label>
+          <input type="range" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="bChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+          <input type="number" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="bChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+      <div class="input-channels" *ngIf="currentOperation === 'brightness'">
+        <div class="input-group">
+          <label>Level</label>
+          <input type="range" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="rChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+          <input type="number" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep"
+                 [(ngModel)]="rChannel" (input)="applyTransformation()" [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+      <div class="grayscale-buttons">
+        <button type="button" (click)="applyGrayscale('avg')">Grayscale (Average)</button>
+        <button type="button" (click)="applyGrayscale('luma')">Grayscale (Luminance)</button>
+      </div>
+    </form>
+
+  </div>
+</div>
