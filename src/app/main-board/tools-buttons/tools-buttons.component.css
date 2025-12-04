@@ -45,3 +45,17 @@ button:hover,
   font-size: 1rem;
   margin-left: 0.4rem;
 }
+.line-dialog-but{
+  position: relative;
+}
+.aside{
+  position: absolute;
+  top:0;
+  left:100%;
+  z-index: 1000;
+  width: inherit;
+}
+.aside > button {
+  width: 100%;
+}
+

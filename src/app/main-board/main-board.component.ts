@@ -21,6 +21,9 @@ import {CubeSliceViewerComponent} from './cube-slice-viewer/cube-slice-viewer.co
 import {SliceStateService} from './services/slice-state.service';
 import {PointTransformationComponent} from './rgb-control/point-transformation/point-transformation.component';
 import {ImageStateService} from './services/image-state.service';
+import {HistogramComponent} from './charts/histogram/histogram.component';
+import {BezierControlComponent} from './bezier-control/bezier-control.component';
+import {BezierTool} from './models/bezier.tool';
 
 @Component({
   selector: 'app-main-board',
@@ -34,7 +37,8 @@ import {ImageStateService} from './services/image-state.service';
     RgbControlComponent,
     ErrDialogComponent,
     CubeSliceViewerComponent,
-    PointTransformationComponent
+    PointTransformationComponent,
+    BezierControlComponent,
   ],
   templateUrl: './main-board.component.html',
   styleUrl: './main-board.component.css'
@@ -69,6 +73,10 @@ export class MainBoardComponent implements OnInit{
     },
     {
       tool: 'cube',
+      formState: false
+    },
+    {
+      tool: 'bezier',
       formState: false
     },
     {
@@ -245,11 +253,10 @@ export class MainBoardComponent implements OnInit{
   onCloseDialog(event: boolean){
     this.isDialog = event;
   }
-  onColorChoose(event: boolean){
-    this.isColorDialog = event;
-  }
-  onColorClose(event: boolean){
-    this.isColorDialog = event;
+  onBezierPointsChange(points: {x: number, y: number}[]) {
+    if (this.activeTool instanceof BezierTool) {
+      this.activeTool.updatePointsFromUI(points, this.board.canvasRender, this.drawService);
+    }
   }
 
   getStateByToolName(toolName: string): boolean{

@@ -1,0 +1,21 @@
+<div class="bezier-panel">
+  <h3>Bézier Curve</h3>
+
+  <div class="form-group">
+    <label>Degree:</label>
+    <input type="number" min="1" max="20" [(ngModel)]="degree" (change)="onDegreeChange()">
+    <small>Points required: {{ degree + 1 }}</small>
+  </div>
+
+  <div class="points-list">
+    <div *ngFor="let point of points; let i = index" class="point-row">
+      <span>P{{i}}:</span>
+      <input type="number" [(ngModel)]="point.x" (input)="onCoordinateChange()" placeholder="X">
+      <input type="number" [(ngModel)]="point.y" (input)="onCoordinateChange()" placeholder="Y">
+    </div>
+
+    <div *ngIf="points.length === 0" class="hint">
+      Click on canvas to add points.
+    </div>
+  </div>
+</div>

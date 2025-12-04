@@ -1,7 +1,13 @@
 <div class="toolbar">
   <div class="tools-container">
     <button (click)="onBrush()"><i class='bx bx-brush'></i></button>
-    <button (click)="onLine()"><i class='bx bx-minus'></i></button>
+    <button (click)="onLineDialog()" class="line-dialog-but"><i class='bx  bx-stroke-drawing'></i>
+      <div class="aside" *ngIf="isLineDialog" (click)="$event.stopPropagation()">
+        <button (click)="onLine()"><i class='bx bx-minus'></i></button>
+        <button (click)="onBezier()"><i class='bx  bx-stroke-pen'></i> </button>
+      </div>
+    </button>
+
     <button (click)="onRectangle()"><i class='bx bx-rectangle-wide'></i></button>
     <button (click)="onCircle()"><i class='bx bx-circle'></i></button>
     <button (click)="onClear()"><i class='bx bx-eraser'></i></button>

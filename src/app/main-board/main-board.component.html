@@ -18,9 +18,15 @@
     <app-dynamic-form [formFields]="handFormFields" *ngIf="getStateByToolName('hand')" [formTitle]="'Move shape'" (formSubmit)="onSubmit($event)"/>
     <app-dynamic-form [formFields]="resizeFormFields" *ngIf="getStateByToolName('resize')" [formTitle]="'Resize shape'" (formSubmit)="onSubmit($event)"/>
     <app-cube-slice-viewer *ngIf="getStateByToolName('cube')"></app-cube-slice-viewer>
-    <app-point-transformation
-      *ngIf="getStateByToolName('pointTransform')">
+    <div id="point-transform" *ngIf="getStateByToolName('pointTransform')">
+    <app-point-transformation>
     </app-point-transformation>
+    </div>
+    <app-bezier-control
+      *ngIf="getStateByToolName('bezier')"
+      (pointsChanged)="onBezierPointsChange($event)">
+    </app-bezier-control>
+
     <app-rgb-control/>
   </div>
 </div>

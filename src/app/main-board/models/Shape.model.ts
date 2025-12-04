@@ -4,7 +4,7 @@ export class ShapeModel {
   id?: number;
   startX: number = 0;
   startY: number = 0;
-  type!: 'rectangle' | 'circle' | 'line' | 'image';
+  type!: 'rectangle' | 'circle' | 'line' | 'image' | 'bezier';
   width?: number;
   height?: number;
   radius?: number;

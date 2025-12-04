@@ -17,19 +17,23 @@ export class ShapeService {
     shape.id = this.id++;
     this._shapes.push(shape);
   }
+
   deleteShapes(){
     this._shapes = [];
     this.catchedShape = null;
   }
+
   set shapes(shapes: ShapeModel[]){
     this._shapes = shapes;
   }
+
   get shapes(){
     return this._shapes;
   }
-  checkPosition(posX: number,posY:number,ctx: CanvasRenderingContext2D):number{
-    if(this.catchedShape){
-      this.catchedShape.unfocusPoints(ctx,this.drawService)
+
+  checkPosition(posX: number, posY: number, ctx: CanvasRenderingContext2D): number {
+    if (this.catchedShape) {
+      this.catchedShape.unfocusPoints(ctx, this.drawService);
       this.catchedShape = null;
     }
     let posX1 = Math.floor(posX);
@@ -43,8 +47,9 @@ export class ShapeService {
     }
     return -1;
   }
-  async drawAll(ctx: CanvasRenderingContext2D){
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
+
+  async drawAll(ctx: CanvasRenderingContext2D) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     for (const shape of this._shapes) {
       if (shape.type === 'line') {
         this.drawService.drawLine(shape.startX, shape.startY,
@@ -55,12 +60,64 @@ export class ShapeService {
       } else if (shape.type === 'rectangle') {
         this.drawService.drawRectangle(shape.startX, shape.startY, shape.width!, shape.height!, ctx, this.size);
       }
+      else if (shape.type === 'bezier') {
+        this.drawBezier(shape, ctx);
+      }
     }
   }
-  private checkFocusPoints(x: number, y:number, pointsArray: {posX: number, posY: number}[]){
+
+  private drawBezier(shape: ShapeModel, ctx: CanvasRenderingContext2D) {
+    const points = shape.controlPoints;
+    if (!points || points.length < 2) return;
+    for (let i = 0; i < points.length - 1; i++) {
+      this.drawService.drawLine(
+        Math.round(points[i].posX),
+        Math.round(points[i].posY),
+        Math.round(points[i+1].posY),
+        Math.round(points[i+1].posX),
+        ctx, 1, 100, 100, 100
+      );
+    }
+    points.forEach(p => {
+      this.drawService.drawRectangle(Math.round(p.posX - 3), Math.round(p.posY - 3), 6, 6, ctx, 1);
+    });
+    const segments = 100;
+    let prev = points[0];
+
+    for (let i = 1; i <= segments; i++) {
+      const t = i / segments;
+      const curr = this.getBezierPoint(t, points);
+
+      this.drawService.drawLine(
+        Math.round(prev.posX),
+        Math.round(prev.posY),
+        Math.round(curr.y),
+        Math.round(curr.x),
+        ctx, 2, 255, 255, 255
+      );
+      prev = { posX: curr.x, posY: curr.y };
+    }
+  }
+
+  private getBezierPoint(t: number, points: { posX: number; posY: number }[]): { x: number; y: number } {
+    if (points.length === 1) {
+      return { x: points[0].posX, y: points[0].posY };
+    }
+    const nextPoints = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      nextPoints.push({
+        posX: (1 - t) * points[i].posX + t * points[i + 1].posX,
+        posY: (1 - t) * points[i].posY + t * points[i + 1].posY
+      });
+    }
+    return this.getBezierPoint(t, nextPoints);
+  }
+
+  private checkFocusPoints(x: number, y: number, pointsArray: { posX: number, posY: number }[]) {
     let pointIndex: number = -1;
-    pointsArray.forEach((point,index) => {
-      if((x >= point.posX - 5 && x <= point.posX + 5) && (y >= point.posY - 5 && y <= point.posY + 5)){
+    if(!pointsArray) return -1;
+    pointsArray.forEach((point, index) => {
+      if ((x >= point.posX - 5 && x <= point.posX + 5) && (y >= point.posY - 5 && y <= point.posY + 5)) {
         pointIndex = index;
       }
     })

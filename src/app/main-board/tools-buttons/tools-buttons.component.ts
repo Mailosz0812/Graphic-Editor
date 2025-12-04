@@ -17,6 +17,8 @@ import { ToolInterface } from '../models/tool.interface';
 import {RgbCubeTool} from '../models/rgbCube.tool';
 import {PointTransformTool} from '../models/pointTransform.tool';
 import {FilterDialogComponent} from '../filters/filter-dialog/filter-dialog.component';
+import {BezierTool} from '../models/bezier.tool';
+import {BezierStateService} from '../services/bezier-state.service';
 
 @Component({
   selector: 'app-buttons-interface',
@@ -34,6 +36,7 @@ export class ToolsButtonsComponent {
   @Output() zoomOutEvent = new EventEmitter<boolean>;
   isColorDialog = false;
   isFilterDialog = false;
+  isLineDialog = false;
 
   private activeTool: ToolInterface | null = null;
 
@@ -41,7 +44,8 @@ export class ToolsButtonsComponent {
               private formState: FormStateService,
               private shapeService: ShapeService,
               private sliceState: SliceStateService,
-              private brushColorService: BrushColorService) {
+              private brushColorService: BrushColorService,
+              private bezierState: BezierStateService) {
 
 
     this.drawService._activeTool.subscribe(tool => {
@@ -57,9 +61,16 @@ export class ToolsButtonsComponent {
     this.formState.setToolName('brush');
   }
 
+  onLineDialog(){
+    this.isLineDialog = !this.isLineDialog;
+  }
   onLine(){
     this.drawService.setTool(new LineTool(this.shapeService));
     this.formState.setToolName('line');
+  }
+  onBezier(){
+    this.drawService.setTool(new BezierTool(this.shapeService, this.bezierState));
+    this.formState.setToolName('bezier');
   }
   onClear(){
     this.clearEvent.emit(true);
