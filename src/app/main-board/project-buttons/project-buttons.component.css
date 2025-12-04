@@ -1,4 +1,4 @@
-/* === Project Buttons Container === */
+
 .project-buttons {
   display: flex;
   align-items: center;
@@ -6,7 +6,6 @@
   margin-left: 3rem;
 }
 
-/* === Base Button Styles === */
 button {
   width: inherit;
   height: inherit;
@@ -22,7 +21,6 @@ button:hover {
   background-color: #454545;
 }
 
-/* === Dropdown Item === */
 .dropdown-item {
   position: relative;
   display: inline-flex;
@@ -32,7 +30,6 @@ button:hover {
   height: inherit;
 }
 
-/* Nested dropdown item (submenu trigger) */
 .dropdown-item.nested {
   width: inherit;
   position: relative;
@@ -42,7 +39,6 @@ button:hover {
   height: inherit;
 }
 
-/* === Dropdown Menu === */
 .dropdown {
   position: absolute;
   display: flex;
@@ -53,14 +49,12 @@ button:hover {
   z-index: 1000;
 }
 
-/* Dropdown positioned to the right of its parent */
 .dropdown.right {
   top: 0;
   left: 100%;
   margin-left: 2px;
 }
 
-/* === Dropdown Buttons === */
 .dropdown-button {
   width: 100%;
   padding: 0.5rem 0.75rem;

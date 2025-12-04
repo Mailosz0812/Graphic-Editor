@@ -55,6 +55,10 @@
         <button type="button" (click)="applyGrayscale('avg')">Grayscale (Average)</button>
         <button type="button" (click)="applyGrayscale('luma')">Grayscale (Luminance)</button>
       </div>
+      <button type="button" (click)="onShowHistogram(true)">Histogram</button>
+      <button type="button" (click)="onShowBinarization(true)">Binarization</button>
+      <app-histogram *ngIf="isHistogram" (closeEvent)="onShowHistogram($event)"></app-histogram>
+      <app-binarization *ngIf="isBinar" (closeEvent)="onShowBinarization($event)"></app-binarization>
     </form>
 
   </div>

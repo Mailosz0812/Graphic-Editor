@@ -19,7 +19,7 @@ export class ProjectButtonsComponent {
 
   onFileDropdown() {
     this.uploadDropdown = !this.uploadDropdown;
-    this.isExportDropdown = false; // close submenus
+    this.isExportDropdown = false;
   }
   onOpen() {
     this.fileInput.nativeElement.click()

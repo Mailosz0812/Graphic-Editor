@@ -3,10 +3,12 @@ import {Subscription} from 'rxjs';
 import {FormsModule} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {ImageStateService} from '../../services/image-state.service';
+import {HistogramComponent} from '../../charts/histogram/histogram.component';
+import {BinarizationComponent} from '../../charts/binarization/binarization.component';
 
 @Component({
   selector: 'app-point-transformation',
-  imports: [ FormsModule, NgIf ],
+  imports: [FormsModule, NgIf, HistogramComponent, BinarizationComponent],
   templateUrl: './point-transformation.component.html',
   styleUrl: './point-transformation.component.css'
 })
@@ -15,6 +17,7 @@ export class PointTransformationComponent implements AfterViewInit, OnDestroy {
   protected rChannel: number = 0;
   protected gChannel: number = 0;
   protected bChannel: number = 0;
+  protected isHistogram: boolean = false;
 
   private originalData: Uint8ClampedArray | null = null;
   private width: number = 0;
@@ -33,6 +36,7 @@ export class PointTransformationComponent implements AfterViewInit, OnDestroy {
     'multiply':   { min: 0, max: 5,   step: 0.1, default: 1 },
     'divide':     { min: 1, max: 10,  step: 0.1, default: 1 }
   };
+  isBinar: boolean = false;
 
   constructor(private imageState: ImageStateService) {}
 
@@ -153,5 +157,13 @@ export class PointTransformationComponent implements AfterViewInit, OnDestroy {
       height: this.height,
       array: output
     });
+  }
+  onShowHistogram(val: boolean){
+    this.isHistogram = val;
+    this.isBinar = false;
+  }
+  onShowBinarization(val: boolean){
+    this.isBinar = val;
+    this.isHistogram = false;
   }
 }

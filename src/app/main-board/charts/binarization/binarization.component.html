@@ -1,0 +1,39 @@
+<div class="overlay" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="binarization-methods">
+      <h3>Methods</h3>
+      <ul>
+        <li (click)="onManual()" [class.active-method]="selectedMethod === 'manual'">Manual</li>
+        <li (click)="onMeanIterative()" [class.active-method]="selectedMethod === 'iterative'">Mean Iterative</li>
+        <li (click)="onEntropy()" [class.active-method]="selectedMethod === 'entropy'">Entropy Selection</li>
+      </ul>
+    </div>
+    <div class="canvas-group">
+      <canvas class="image-playground" #binarization></canvas>
+      <div class="button-container">
+        <button (click)="onApply()">Apply</button>
+        <button (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="binarization-form">
+      <h4 *ngIf="selectedMethod">Settings: {{ selectedMethod | titlecase }}</h4>
+
+      <div *ngIf="selectedMethod === 'manual'" class="form-control">
+        <label>Threshold: {{ thresholdValue }}</label>
+        <input
+          type="range"
+          min="0"
+          max="255"
+          [(ngModel)]="thresholdValue"
+          (input)="onThresholdChange()">
+      </div>
+
+      <div *ngIf="selectedMethod === 'iterative' || selectedMethod === 'entropy'" class="form-control">
+        <p>Calculated Threshold: <strong>{{ calculatedThreshold }}</strong></p>
+      </div>
+
+      <p *ngIf="!selectedMethod" style="color: #888;">Select a method from the list.</p>
+    </div>
+  </div>
+</div>

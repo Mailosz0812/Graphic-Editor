@@ -59,8 +59,6 @@ export class ColorDialogComponent implements AfterViewInit {
   onRgbChange() {
     if (this.isUpdating) return;
     this.isUpdating = true;
-
-    // Walidacja 0-255
     this.rgb.r = Math.min(255, Math.max(0, this.rgb.r || 0));
     this.rgb.g = Math.min(255, Math.max(0, this.rgb.g || 0));
     this.rgb.b = Math.min(255, Math.max(0, this.rgb.b || 0));

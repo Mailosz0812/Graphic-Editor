@@ -1,0 +1,22 @@
+<div class="histogram" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="methods-group">
+      <h3>Methods</h3>
+      <ul>
+        <li (click)="onStretch()">Stretching</li>
+        <li (click)="onEqualize()">Equalization</li>
+      </ul>
+    </div>
+    <div class="radius-group">
+      <div class="tabs">
+        <button (click)="onHistogram()"  class="tab" [class.active]="mode==='histogram'">Histogram</button>
+        <button (click)="onImageView()"  class="tab" [class.active]="mode==='image'">Image</button>
+      </div>
+      <canvas class="chart-playground" #histogram></canvas>
+      <div class="button-container">
+        <button (click)="onApply()" >Apply</button>
+        <button (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
