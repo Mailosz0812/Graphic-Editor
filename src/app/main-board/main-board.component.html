@@ -1,15 +1,18 @@
 <div class="main-board">
   <div class="col-layout">
-  <app-project-buttons (openFile)="onImport($event)" (exportFile)="onExport($event)"/>
-  <div class="full-width">
-    <app-buttons-interface (clearEvent)="onClear($event)"
-                           (zoomInEvent)="onZoomIn($event)"
-                           (zoomOutEvent)="onZoomOut($event)"
-    ></app-buttons-interface>
-    <app-draw-board #playground></app-draw-board>
-    <app-image-form [canvas]="board.board.nativeElement" (closeDialogEvent)="onCloseDialog($event)" *ngIf="isDialog"></app-image-form>
-    <app-err-dialog [rawError]="lastError" (closeEvent)="onCloseErr($event)" *ngIf="isErrOpen"/>
-  </div>
+    <app-project-buttons (openFile)="onImport($event)" (exportFile)="onExport($event)"/>
+    <div class="full-width">
+      <app-buttons-interface (clearEvent)="onClear($event)"
+                             (zoomInEvent)="onZoomIn($event)"
+                             (zoomOutEvent)="onZoomOut($event)"
+                             (colorAnalysisEvent)="onOpenColorAnalysis($event)"
+      ></app-buttons-interface>
+      <app-draw-board #playground></app-draw-board>
+      <app-image-form [canvas]="board.board.nativeElement" (closeDialogEvent)="onCloseDialog($event)" *ngIf="isDialog"></app-image-form>
+      <app-err-dialog [rawError]="lastError" (closeEvent)="onCloseErr($event)" *ngIf="isErrOpen"/>
+
+      <app-color-analysis *ngIf="isColorAnalysis" (closeEvent)="onOpenColorAnalysis($event)"></app-color-analysis>
+    </div>
   </div>
   <div class="side-panel">
     <app-dynamic-form [formFields]="rectFormFields" *ngIf="getStateByToolName('rectangle')" [formTitle]="'Rectangle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
@@ -17,10 +20,18 @@
     <app-dynamic-form [formFields]="circleFormFields" *ngIf="getStateByToolName('circle')" [formTitle]="'Circle'" (formSubmit)="onSubmit($event)" ></app-dynamic-form>
     <app-dynamic-form [formFields]="handFormFields" *ngIf="getStateByToolName('hand')" [formTitle]="'Move shape'" (formSubmit)="onSubmit($event)"/>
     <app-dynamic-form [formFields]="resizeFormFields" *ngIf="getStateByToolName('resize')" [formTitle]="'Resize shape'" (formSubmit)="onSubmit($event)"/>
+
+    <div *ngIf="getStateByToolName('polygon')" style="color: #e6e6e6; padding: 0.5rem;">
+      <h3>Polygon</h3>
+      <p style="font-size: 0.9rem; color: #bdbdbd;">Click to add points. Click start point to close.</p>
+    </div>
+    <app-dynamic-form [formFields]="rotateFormFields" *ngIf="getStateByToolName('rotate')" [formTitle]="'Rotate'" (formSubmit)="onSubmit($event)"/>
+    <app-dynamic-form [formFields]="scaleFormFields" *ngIf="getStateByToolName('scale')" [formTitle]="'Scale'" (formSubmit)="onSubmit($event)"/>
+
     <app-cube-slice-viewer *ngIf="getStateByToolName('cube')"></app-cube-slice-viewer>
     <div id="point-transform" *ngIf="getStateByToolName('pointTransform')">
-    <app-point-transformation>
-    </app-point-transformation>
+      <app-point-transformation>
+      </app-point-transformation>
     </div>
     <app-bezier-control
       *ngIf="getStateByToolName('bezier')"

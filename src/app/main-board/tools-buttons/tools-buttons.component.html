@@ -7,7 +7,7 @@
         <button (click)="onBezier()"><i class='bx  bx-stroke-pen'></i> </button>
       </div>
     </button>
-
+    <button (click)="onPolygon()"><i class='bx  bx-polygon'></i> </button>
     <button (click)="onRectangle()"><i class='bx bx-rectangle-wide'></i></button>
     <button (click)="onCircle()"><i class='bx bx-circle'></i></button>
     <button (click)="onClear()"><i class='bx bx-eraser'></i></button>
@@ -15,14 +15,21 @@
     <button (click)="onColorChoose()"><i class='bx  bx-eyedropper'    ></i> </button>
     <app-color-dialog *ngIf="isColorDialog" (closeEvent)="onColorClose($event)"></app-color-dialog>
     <button (click)="onPointTransform()"><i class='bx  bx-slider'></i></button>
+    <button (click)="onColorAnalysis()" title="Green/Color Analysis"><i class='bx bx-leaf'></i></button>
     <button (click)="onFilterDialog()"><i class='bx  bx-filter'></i></button>
     <app-filter-dialog *ngIf="isFilterDialog" (closeEvent)="onFilterClose($event)"></app-filter-dialog>
 
     <div id="color-picked"></div>
-    </div>
+  </div>
   <div class="color-picker-container">
     <button (click)="onHand()"><i class='bx bx-hand'></i></button>
-    <button (click)="onResize()"><i class='bx bx-edit'></i></button>
+    <button (click)="onTransformDialog()" class="line-dialog-but"><i class='bx bx-move'></i>
+      <div class="aside" *ngIf="isTransformDialog" (click)="$event.stopPropagation()">
+        <button (click)="onRotate()" title="Rotate"><i class='bx  bx-rotate-cw'></i> </button>
+        <button (click)="onScale()" title="Scale"><i class='bx  bx-expand-left'></i> </button>
+        <button (click)="onResize()" title="Resize Box"><i class='bx bx-edit'></i></button>
+      </div>
+    </button>
     <button (click)="onZoomIn()"><i class='bx  bx-search-plus'  ></i> </button>
     <button (click)="onZoomOut()"><i class='bx  bx-search-minus'  ></i> </button>
   </div>

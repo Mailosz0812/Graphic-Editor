@@ -36,16 +36,39 @@ export class ShapeService {
       this.catchedShape.unfocusPoints(ctx, this.drawService);
       this.catchedShape = null;
     }
-    let posX1 = Math.floor(posX);
-    let posY1 = Math.floor(posY);
-    for (const shape of this._shapes) {
-      const index = this.checkFocusPoints(posX1, posY1, shape.controlPoints);
-      if (index !== -1) {
-        this.catchedShape = shape;
-        return index;
+    let posX1 = posX;
+    let posY1 = posY;
+
+    for (let i = this._shapes.length - 1; i >= 0; i--) {
+      const shape = this._shapes[i];
+
+      if (shape.type === 'polygon') {
+        if (this.isPointInPolygon(posX1, posY1, shape.vertices)) {
+          this.catchedShape = shape;
+          return 0;
+        }
+      } else {
+        const index = this.checkFocusPoints(posX1, posY1, shape.controlPoints);
+        if (index !== -1) {
+          this.catchedShape = shape;
+          return index;
+        }
       }
     }
     return -1;
+  }
+
+  private isPointInPolygon(x: number, y: number, vertices: {x: number, y: number}[]): boolean {
+    let inside = false;
+    for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+      const xi = vertices[i].x, yi = vertices[i].y;
+      const xj = vertices[j].x, yj = vertices[j].y;
+
+      const intersect = ((yi > y) !== (yj > y))
+        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
   }
 
   async drawAll(ctx: CanvasRenderingContext2D) {
@@ -59,10 +82,28 @@ export class ShapeService {
         this.drawService.drawCircle(shape.startX, shape.startY, shape.radius!, ctx, this.size);
       } else if (shape.type === 'rectangle') {
         this.drawService.drawRectangle(shape.startX, shape.startY, shape.width!, shape.height!, ctx, this.size);
-      }
-      else if (shape.type === 'bezier') {
+      } else if (shape.type === 'bezier') {
         this.drawBezier(shape, ctx);
+      } else if (shape.type === 'polygon') {
+        this.drawPolygon(shape, ctx);
       }
+    }
+  }
+
+  private drawPolygon(shape: ShapeModel, ctx: CanvasRenderingContext2D) {
+    const v = shape.vertices;
+    if (v.length < 2) return;
+
+    for(let i = 0; i < v.length; i++) {
+      const next = (i + 1) % v.length;
+      this.drawService.drawLine(
+        Math.round(v[i].x), Math.round(v[i].y),
+        Math.round(v[next].y), Math.round(v[next].x),
+        ctx, this.size, 189, 168, 168
+      );
+    }
+    if (shape.isFocused) {
+      shape.focusPoints(ctx, this.drawService);
     }
   }
 
@@ -71,10 +112,8 @@ export class ShapeService {
     if (!points || points.length < 2) return;
     for (let i = 0; i < points.length - 1; i++) {
       this.drawService.drawLine(
-        Math.round(points[i].posX),
-        Math.round(points[i].posY),
-        Math.round(points[i+1].posY),
-        Math.round(points[i+1].posX),
+        Math.round(points[i].posX), Math.round(points[i].posY),
+        Math.round(points[i+1].posY), Math.round(points[i+1].posX),
         ctx, 1, 100, 100, 100
       );
     }
@@ -89,10 +128,8 @@ export class ShapeService {
       const curr = this.getBezierPoint(t, points);
 
       this.drawService.drawLine(
-        Math.round(prev.posX),
-        Math.round(prev.posY),
-        Math.round(curr.y),
-        Math.round(curr.x),
+        Math.round(prev.posX), Math.round(prev.posY),
+        Math.round(curr.y), Math.round(curr.x),
         ctx, 2, 255, 255, 255
       );
       prev = { posX: curr.x, posY: curr.y };

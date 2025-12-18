@@ -1,18 +1,73 @@
 <div class="overlay" (click)="onClose()">
   <div class="modal" (click)="$event.stopPropagation()">
-    <div class="filters-list">
+
+    <div class="filters-sidebar">
       <h3>Filters</h3>
-      <ul>
-        <li (click)="onBoxBlur()">Box Blur</li>
-        <li (click)="onMedian()">Median</li>
-        <li (click)="onSobel()">Sobel</li>
-        <li (click)="onHigh()">High-pass</li>
-        <li (click)="onGaussian()">Gaussian Blur</li>
-      </ul>
-      <button (click)="onCancel()">Cancel</button>
+
+      <div class="menu-item" (click)="toggleStandard()">
+        <span>Standard Filters</span>
+        <i class='bx' [class.bx-chevron-down]="!isStandardOpen" [class.bx-chevron-up]="isStandardOpen"></i>
+      </div>
+
+      <div class="submenu" *ngIf="isStandardOpen">
+        <ul>
+          <li (click)="onBoxBlur()">Box Blur</li>
+          <li (click)="onMedian()">Median</li>
+          <li (click)="onSobel()">Sobel</li>
+          <li (click)="onHigh()">High-pass</li>
+          <li (click)="onGaussian()">Gaussian Blur</li>
+        </ul>
+      </div>
+
+      <div class="menu-item" (click)="toggleMorph()">
+        <span>Morphology</span>
+        <i class='bx' [class.bx-chevron-down]="!isMorphOpen" [class.bx-chevron-up]="isMorphOpen"></i>
+      </div>
+
+      <div class="submenu" *ngIf="isMorphOpen">
+
+        <div class="se-config">
+          <label>Struct. Element</label>
+          <div class="size-inputs">
+            <input type="number" [(ngModel)]="seWidth" min="1" max="9" (change)="updateSESize()">
+            <span>x</span>
+            <input type="number" [(ngModel)]="seHeight" min="1" max="9" (change)="updateSESize()">
+          </div>
+
+          <div class="se-grid" [style.grid-template-columns]="'repeat(' + seWidth + ', 1fr)'">
+            <ng-container *ngFor="let row of structuringElement; let r = index">
+              <div *ngFor="let val of row; let c = index"
+                   class="se-cell"
+                   [style.background-color]="getCellColor(val)"
+                   (click)="toggleCell(r, c)"
+                   title="Click to toggle">
+              </div>
+            </ng-container>
+          </div>
+          <small class="hint">Green(1), Red(0), Gray(X)</small>
+        </div>
+
+        <ul>
+          <li (click)="onDilation()">Dilation</li>
+          <li (click)="onErosion()">Erosion</li>
+          <li (click)="onOpening()">Opening</li>
+          <li (click)="onClosing()">Closing</li>
+          <li (click)="onHitOrMiss()">Hit-or-Miss</li>
+          <li (click)="onThinning()">Thinning</li>
+          <li (click)="onThickening()">Thickening</li>
+        </ul>
+      </div>
+
+
     </div>
+
     <div class="canvas-wrapper">
       <canvas class="view" #playground></canvas>
+      <div class="sidebar-footer">
+        <button (click)="onApply()" class="primary">Apply</button>
+        <button (click)="onCancel()">Cancel</button>
+      </div>
     </div>
+
   </div>
 </div>

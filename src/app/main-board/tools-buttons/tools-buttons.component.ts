@@ -19,6 +19,8 @@ import {PointTransformTool} from '../models/pointTransform.tool';
 import {FilterDialogComponent} from '../filters/filter-dialog/filter-dialog.component';
 import {BezierTool} from '../models/bezier.tool';
 import {BezierStateService} from '../services/bezier-state.service';
+import {PolygonTool} from '../models/polygon.tool';
+import {TransformationTool} from '../models/transformation.tool';
 
 @Component({
   selector: 'app-buttons-interface',
@@ -34,9 +36,11 @@ export class ToolsButtonsComponent {
   @Output() clearEvent = new EventEmitter<boolean>;
   @Output() zoomInEvent = new EventEmitter<boolean>;
   @Output() zoomOutEvent = new EventEmitter<boolean>;
+  @Output() colorAnalysisEvent = new EventEmitter<boolean>();
   isColorDialog = false;
   isFilterDialog = false;
   isLineDialog = false;
+  isTransformDialog = false;
 
   private activeTool: ToolInterface | null = null;
 
@@ -117,5 +121,27 @@ export class ToolsButtonsComponent {
   }
   onFilterClose(event: boolean){
     this.isFilterDialog = event;
+  }
+  onPolygon() {
+    this.drawService.setTool(new PolygonTool(this.shapeService));
+    this.formState.setToolName('polygon');
+  }
+
+  onTransformDialog() {
+    this.isTransformDialog = !this.isTransformDialog;
+  }
+
+  onRotate() {
+    this.drawService.setTool(new TransformationTool(this.shapeService, 'rotate'));
+    this.formState.setToolName('rotate');
+  }
+
+  onScale() {
+    this.drawService.setTool(new TransformationTool(this.shapeService, 'scale'));
+    this.formState.setToolName('scale');
+  }
+
+  onColorAnalysis() {
+    this.colorAnalysisEvent.emit(true);
   }
 }

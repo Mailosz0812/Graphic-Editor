@@ -1,0 +1,49 @@
+<div class="overlay" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="settings-panel">
+      <h3>Color Analysis</h3>
+      <p class="desc">Calculate percentage of specific areas (default: Green).</p>
+
+      <div class="result-box">
+        <span class="label">Coverage:</span>
+        <span class="value">{{ resultPercentage }}%</span>
+        <small>({{ detectedPixelsCount }} / {{ totalPixelsCount }} px)</small>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label>Hue Range ({{hueMin}}° - {{hueMax}}°)</label>
+          <div class="range-dual">
+            <span>Min</span>
+            <input type="range" min="0" max="360" [(ngModel)]="hueMin" (input)="onParamChange()">
+          </div>
+          <div class="range-dual">
+            <span>Max</span>
+            <input type="range" min="0" max="360" [(ngModel)]="hueMax" (input)="onParamChange()">
+          </div>
+          <div class="hue-bar"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Min Saturation ({{satMin}}%)</label>
+          <input type="range" min="0" max="100" [(ngModel)]="satMin" (input)="onParamChange()">
+        </div>
+
+        <div class="control-group">
+          <label>Min Brightness ({{valMin}}%)</label>
+          <input type="range" min="0" max="100" [(ngModel)]="valMin" (input)="onParamChange()">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button (click)="onClose()">Close</button>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas #previewCanvas></canvas>
+    </div>
+
+  </div>
+</div>

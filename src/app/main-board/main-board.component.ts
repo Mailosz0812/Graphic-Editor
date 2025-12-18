@@ -24,6 +24,8 @@ import {ImageStateService} from './services/image-state.service';
 import {HistogramComponent} from './charts/histogram/histogram.component';
 import {BezierControlComponent} from './bezier-control/bezier-control.component';
 import {BezierTool} from './models/bezier.tool';
+import {MatrixUtils} from './utils/matrix.utils';
+import {ColorAnalysisComponent} from './color-analysis/color-analysis.component';
 
 @Component({
   selector: 'app-main-board',
@@ -39,6 +41,7 @@ import {BezierTool} from './models/bezier.tool';
     CubeSliceViewerComponent,
     PointTransformationComponent,
     BezierControlComponent,
+    ColorAnalysisComponent,
   ],
   templateUrl: './main-board.component.html',
   styleUrl: './main-board.component.css'
@@ -82,7 +85,10 @@ export class MainBoardComponent implements OnInit{
     {
       tool: 'pointTransform',
       formState: false
-    }
+    },
+    { tool: 'polygon', formState: false },
+    { tool: 'rotate', formState: false },
+    { tool: 'scale', formState: false }
   ];
 
   rectFormFields: FormFieldModel[] = [
@@ -173,11 +179,24 @@ export class MainBoardComponent implements OnInit{
       label: 'Increase or decrease size'
     }
   ]
+
+  rotateFormFields: FormFieldModel[] = [
+    { fieldName: 'pivotX', fieldType: 'number', label: 'Pivot X' },
+    { fieldName: 'pivotY', fieldType: 'number', label: 'Pivot Y' },
+    { fieldName: 'angle', fieldType: 'number', label: 'Angle (deg)' }
+  ];
+
+  scaleFormFields: FormFieldModel[] = [
+    { fieldName: 'pivotX', fieldType: 'number', label: 'Pivot X' },
+    { fieldName: 'pivotY', fieldType: 'number', label: 'Pivot Y' },
+    { fieldName: 'factor', fieldType: 'number', label: 'Scale Factor' }
+  ];
   private activeTool!: ToolInterface | null;
   private errSub!: Subscription;
   lastError: UIError | null = null;
   isErrOpen: boolean = false;
   isColorDialog: boolean = false;
+  isColorAnalysis: boolean = false;
   constructor(private formState: FormStateService,private toolStateService: ToolStateService
               ,private drawService: DrawingService
               ,private shapeService: ShapeService
@@ -248,7 +267,45 @@ export class MainBoardComponent implements OnInit{
   }
   onSubmit(params: any){
     const ctx = this.board.canvasRender;
-    this.activeTool?.draw(params,ctx,this.drawService);
+    const currentState = this.statesMap.find(s => s.formState);
+
+    if (currentState?.tool === 'rotate') {
+      this.applyRotationFromForm(params, ctx);
+    } else if (currentState?.tool === 'scale') {
+      this.applyScalingFromForm(params, ctx);
+    } else {
+      // Standardowe rysowanie / hand move
+      this.activeTool?.draw(params,ctx,this.drawService);
+    }
+  }
+  private applyRotationFromForm(params: any, ctx: CanvasRenderingContext2D) {
+    if (!this.shapeService.catchedShape) return;
+    const px = +params.pivotX || 0;
+    const py = +params.pivotY || 0;
+    const angle = +params.angle || 0;
+
+    let m = MatrixUtils.identity();
+    m = MatrixUtils.multiply(MatrixUtils.translation(-px, -py), m);
+    m = MatrixUtils.multiply(MatrixUtils.rotation(angle), m);
+    m = MatrixUtils.multiply(MatrixUtils.translation(px, py), m);
+
+    this.shapeService.catchedShape.applyTransformation(m);
+    this.shapeService.drawAll(ctx);
+  }
+
+  private applyScalingFromForm(params: any, ctx: CanvasRenderingContext2D) {
+    if (!this.shapeService.catchedShape) return;
+    const px = +params.pivotX || 0;
+    const py = +params.pivotY || 0;
+    const factor = +params.factor || 1;
+
+    let m = MatrixUtils.identity();
+    m = MatrixUtils.multiply(MatrixUtils.translation(-px, -py), m);
+    m = MatrixUtils.multiply(MatrixUtils.scaling(factor, factor), m);
+    m = MatrixUtils.multiply(MatrixUtils.translation(px, py), m);
+
+    this.shapeService.catchedShape.applyTransformation(m);
+    this.shapeService.drawAll(ctx);
   }
   onCloseDialog(event: boolean){
     this.isDialog = event;
@@ -257,6 +314,10 @@ export class MainBoardComponent implements OnInit{
     if (this.activeTool instanceof BezierTool) {
       this.activeTool.updatePointsFromUI(points, this.board.canvasRender, this.drawService);
     }
+  }
+
+  onOpenColorAnalysis(val: boolean) {
+    this.isColorAnalysis = val;
   }
 
   getStateByToolName(toolName: string): boolean{

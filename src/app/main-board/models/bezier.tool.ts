@@ -18,36 +18,31 @@ export class BezierTool implements ToolInterface {
     this.bezierState.updatePoints([]);
   }
 
-  // --- NOWA METODA: Obsługa zmian z formularza ---
   updatePointsFromUI(newPoints: {x: number, y: number}[], ctx: CanvasRenderingContext2D, drawService: DrawingService) {
-    // 1. Aktualizacja lokalnych punktów na podstawie danych z UI
+
     if (this.points.length !== newPoints.length) {
-      // Jeśli zmieniła się liczba punktów (np. zmiana stopnia), resetujemy tablicę
+
       this.points = newPoints.map(p => ({ posX: p.x, posY: p.y }));
 
-      // Jeśli edytujemy zapisany kształt, musimy podmienić mu tablicę
+
       if (this.shapeService.catchedShape && this.shapeService.catchedShape.type === 'bezier' as any) {
         this.shapeService.catchedShape.controlPoints = this.points;
       }
     } else {
-      // Aktualizacja wartości (zachowując referencje obiektów, co jest bezpieczniejsze)
+
       for(let i=0; i<this.points.length; i++) {
         this.points[i].posX = newPoints[i].x;
         this.points[i].posY = newPoints[i].y;
       }
     }
 
-    // 2. Wymuszenie przerysowania
-    // Używamy shapeService.drawAll, aby odświeżyć wszystko (tło, inne kształty i naszą krzywą)
     this.shapeService.drawAll(ctx);
 
-    // Jeśli jesteśmy w trakcie tworzenia (kształt nie jest jeszcze w shapeService), musimy go dorysować ręcznie
     if (!this.shapeService.catchedShape) {
       this.drawBezierCurve(ctx, drawService, this.points);
     }
   }
 
-  // --- Reszta metod (z poprawką Math.round z poprzedniego kroku) ---
 
   private getBezierPoint(t: number, points: { posX: number; posY: number }[]): { x: number; y: number } {
     if (points.length === 1) {
@@ -66,14 +61,14 @@ export class BezierTool implements ToolInterface {
   draw(params: any, ctx: CanvasRenderingContext2D, drawService: DrawingService): void {}
 
   private drawBezierCurve(ctx: CanvasRenderingContext2D, drawService: DrawingService, points: { posX: number; posY: number }[]) {
-    // Punkty kontrolne
+
     points.forEach(p => {
       drawService.drawRectangle(Math.round(p.posX - 3), Math.round(p.posY - 3), 6, 6, ctx, 1);
     });
 
     if (points.length < 2) return;
 
-    // Linie pomocnicze
+
     for (let i = 0; i < points.length - 1; i++) {
       drawService.drawLine(
         Math.round(points[i].posX), Math.round(points[i].posY),
@@ -82,7 +77,6 @@ export class BezierTool implements ToolInterface {
       );
     }
 
-    // Krzywa właściwa
     const segments = 100;
     let prev = points[0];
     for (let i = 1; i <= segments; i++) {
